@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Online Drug Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+    <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+
+<body>
+    <div data-role="page" id="myPage" data-dom-cache="false">
+
+        <div data-role="header">
+            <h1>Medicines</h1>
+        </div>
+
+        <div data-role="content">
+
+            <input type="search" onkeyup="searchMedicines()" id="searchMedicine" placeholder="Search for medicnes..">
+
+            <img class="logoutImg" src="/images/logout.jpg" alt="">
+
+
+
+            <div id="medicineBox">
+
+            </div>
+
+        </div>
+
+        <div class="parent">
+        </div>
+        <div class="dialog" style="display:none ;">
+            <div class="header">
+                Are you want to logout?
+            </div>
+            <button class="cancelBTN">Cancel</button>
+            <button class="logoutBTN">Logout</button>
+        </div>
+
+
+        <style>
+            .parent {
+
+                background-color: #c6c1c1;
+                position: relative;
+                top: -270px;
+                opacity: 0.5;
+                width: 100%;
+                height: 400px;
+                top: -250px;
+                display: none;
+            }
+
+
+            .header {
+                background-color: black;
+                color: white;
+                text-align: center;
+                height: 50px;
+                align-items: center;
+                border-radius: 10px;
+                width: 220px;
+                top: 20px;
+                position: relative;
+                left: 70px;
+            }
+
+            .dialog {
+                width: fit-content;
+                height: fit-content;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                border-radius: 10px;
+                border: 1px solid black;
+                background-color: black;
+                width: 370px;
+
+            }
+
+
+
+
+
+            #medicineBox {
+                display: flex;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
+            }
+
+
+            .logoutImg {
+                width: 30px;
+                height: 30px;
+                float: right;
+                position: relative;
+                /* top: -255px; */
+            }
+
+            .price {
+                font-weight: bold;
+                position: relative;
+                left: 10px;
+                top: 25px;
+            }
+
+
+            .myBox {
+                height: 225px;
+                width: 180px;
+                margin-top: 15px;
+                background-color: white;
+                box-shadow: 1px 1px 22px 2px #969696
+            }
+
+
+            .nameitem {
+                position: relative;
+                top: 20px;
+                left: 8px;
+            }
+
+            .medicineImg {
+                width: 100%;
+                object-fit: contain;
+                height: 130px;
+                position: relative;
+                top: -19px;
+                background-color: black;
+            }
+
+            .company {
+                text-align: center;
+                font-family: Arial, Helvetica, sans-serif;
+                color: rgb(99, 126, 206);
+                position: relative;
+                top: 150px;
+                right: 20px;
+            }
+        </style>
+
+
+        <script>
+
+
+            function searchMedicines() {
+                let inputText = document.getElementById('searchMedicine');
+                let filter = inputText.value.toUpperCase();
+                let boxList = medicineBox;
+                for (let i = 0; i < boxList.children.length; i++) {
+                    let medicineBox = boxList.children[i];
+                    txtValue = medicineBox.textContent || medicineBox.innerHTML;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        medicineBox.style.display = "";
+                    } else {
+                        medicineBox.style.display = "none";
+                    }
+                }
+            }
+
+
+            async function getMedicine() {
+
+                let resp = await axios.get('/auth/getMedicine').then(res => {
+
+                    if (res.data) {
+
+                        res.data.map((item) => {
+
+                            medicineBox.innerHTML += '<div class="myBox" onclick=order("' + item._id + '")> <div class="company">' + "Company" + "&nbsp" + item.companyName + '</div> <img class="medicineImg" src=' + "/images/" + item.medicinePic + '  />  <div class="nameitem">' + item.medicineName + '</div>  <div class="price">' + "Rs:" + "&nbsp" + "&nbsp" + item.medicinePrice + '</div>   </div>'
+
+
+
+
+                        })
+                    }
+                })
+            }
+
+            function order(id) {
+                $.mobile.changePage("order.html", { data: { id }, transition: "turn", changeHash: true });
+
+                $(document).on("pagechange", function (toPage) {
+                    if (toPage.currentTarget.URL.includes('order')) {
+                    }
+
+                });
+            };
+
+
+
+
+            getMedicine();
+
+
+
+            document.querySelector('.logoutImg').onclick = function () {
+
+                $('.parent').fadeIn();
+                $('.dialog').fadeIn();
+                document.querySelector('.logoutBTN').onclick = function () {
+
+                    localStorage.removeItem('user');
+
+                    $.mobile.changePage("login.html", { transition: "turn", changeHash: true });
+                }
+            }
+
+            document.querySelector('.cancelBTN').onclick = function () {
+                $('.dialog').fadeOut();
+                $('.parent').fadeOut();
+
+
+            }
+
+        </script>
+
+        <script src="app.js"></script>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Online Drugs  Store</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+	<script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="https://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+
+<body>
+
+
+    <div data-role="page">
+
+        <style>
+            .haveAccount {
+                color: red;
+                text-align: center;
+            }
+        </style>
+
+
+        <div data-role="header">
+            <h1>Online Drugs Store</h1>
+        </div>
+        <form id="check-user" method="post">
+            <fieldset>
+                <div data-role="feildcontain">
+                    <input type="text" name="username" id="username" value="" placeholder="Name" />
+                    <input type="text" name="userPassword" id="userPassword" value="" placeholder="Password" />
+                    <input type="email" name="userEmail" id="userEmail" value="" placeholder="Email" />
+                    <input type="text" name="userAddress" id="userAddress" value="" placeholder="Address">
+                    <input type="number" name="userContact" id="userContact" value="" placeholder="Contact" />
+                    <input type="reset" value="Reset Form" />
+                    <button>Sign up</button>
+                </div>
+            </fieldset>
+        </form>
+
+        <div class="haveAccount">
+            !Already Have a Account?
+        </div>
+
+
+        <script>
+
+
+            document.querySelector('#check-user button').onclick = function signupForm(event) {
+
+                event.preventDefault();
+
+                if ($('#username').val().length > 0 && $('#userPassword').val().length > 0 && $('#userEmail').val().length > 0 && $('#userAddress').val().length > 0 && $('#userContact').val().length > 0) {
+                    axios.post('/auth/signup', {
+                        name: username.value,
+                        password: userPassword.value,
+                        email: userEmail.value,
+                        address: userAddress.value,
+                        contact: userContact.value,
+                    });
+                $.mobile.changePage("dashboard.html", { transition: "turn", changeHash: true });
+                } else {
+                    alert('Please fill all nececery fields');
+
+                }
+
+            }
+
+            document.querySelector(".haveAccount").onclick = function () {
+                $.mobile.changePage("login.html", { transition: "turn", changeHash: true });
+            }
+
+
+
+        </script>
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Online Drugs Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+    <script src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+
+<body>
+
+
+    <div data-role="page">
+
+        <style>
+            #text {
+                text-align: center;
+            }
+        </style>
+
+        <div data-role="header">
+            <h1>Login</h1>
+        </div>
+        <form method="post">
+            <fieldset>
+                <div data-role="feildcontain">
+                    <input type="email" name="Email" id="email" value="" placeholder="Enter Email" />
+                    <input type="text" name="Password" id="password" value="" placeholder="Enter Password" />
+                    <input type="reset" value="Reset Form" />
+                    <button id="LoginUser">Login</button>
+                </div>
+            </fieldset>
+        </form>
+        <h4 id="text" style="color:rgb(109, 109, 246)">Or new Here?</h4>
+
+
+
+        <script src="app.js"></script>
+
+        <script>
+
+
+            document.querySelector('#text').onclick = function (){
+                $.mobile.changePage("signup.html", { transition: "turn", changeHash: true });
+            }
+
+
+
+            $(document).on('click', "#LoginUser", async function loginUser(event) {
+
+                event.preventDefault();
+                if ($('#password').val().length > 0 && $('#email').val().length > 0) {
+                    let res = await axios.post('/auth/login', {
+                        password: password.value,
+                        email: email.value,
+                    });
+
+                    if (res.data) {
+                        // localStorage.setItem('token', res.data.nishani);
+
+
+                        let user = JSON.stringify(res.data.userFound);
+
+                        localStorage.setItem('user',user )
+
+                        if (res.data.userFound.type === 'admin') {
+
+                            $.mobile.changePage("admin.html", { transition: "turn", changeHash: true });
+                            // document.querySelector('#Login-user').reset();
+                            document.querySelector('.dialog').style.display = 'none';
+                            document.querySelector('.parent').style.display = 'none';
+                        } else {
+                            $.mobile.changePage("dashboard.html", { transition: "turn", changeHash: true });
+
+                            // document.querySelector('#LoginUser').reset();
+                        }
+                    } else {
+                        alert('user not Found');
+                    }
+
+
+
+                } else {
+                    alert('Please fill the field')
+                }
+
+            });
+
+
+            // if (localStorage.getItem('token')) {
+
+            //     axios.post('/auth/session', { token: localStorage.getItem('token') }).then((res) => {
+
+            //         if (res.data) {
+
+            //             window.currentUser = res.data.userFound;
+
+            //         } else {
+            //             alert('user not Found')
+            //         }
+
+            //     })
+            // }
+
+
+        </script>
+
+    </div>
+
+</body>
+
+</html>
